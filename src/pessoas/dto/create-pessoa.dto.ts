@@ -1,11 +1,13 @@
-import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString, Validate } from "class-validator";
 
 
 export class CreatePessoaDto {
-@IsBoolean()
+  @IsBoolean()
   admin: boolean;
+
   @IsString()
   cpf: string;
  
+  @IsNotEmpty()
   nome: string;
 }

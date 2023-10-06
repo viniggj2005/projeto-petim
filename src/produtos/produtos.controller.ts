@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ProdutosService } from './produtos.service';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
@@ -19,8 +19,14 @@ export class ProdutosController {
   }
 
   @Patch('/favoritar/:id')
-  favoritar(@Param('id') id: string){
-    return this.produtosService.favoritar(+id);
+favoritar(@Param('id') id: string, @Body() { cpf }: { cpf: string }) {
+  return this.produtosService.favoritar(+id, cpf);
+}
+
+
+  @Get('page/:page')
+  page(@Param('page') page: number) {
+    return this.produtosService.page(+page);
   }
   @Get()
   findAll() {
@@ -33,12 +39,17 @@ export class ProdutosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProdutoDto: UpdateProdutoDto) {
-    return this.produtosService.update(+id, updateProdutoDto);
+  async update(@Param('id') id: string, @Body() { cpf, ...updateProdutoDto }: UpdateProdutoDto) {
+    try {
+      const produto = await this.produtosService.update(+id, updateProdutoDto, cpf);
+      return { message: 'Produto alterado com sucesso', produto };
+    } catch (error) {
+      throw error;
+    }
   }
-
+ 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.produtosService.remove(+id);
+  remove(@Param('id') id: string, @Body() { cpf }: { cpf: string }) {
+    return this.produtosService.remove(+id,cpf);
   }
 }
