@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePedidosProdutoDto } from './dto/create-pedidos_produto.dto';
 import { UpdatePedidosProdutoDto } from './dto/update-pedidos_produto.dto';
+import { PessoasService } from 'src/pessoas/pessoas.service';
+import { ProdutosService } from 'src/produtos/produtos.service';
 
 @Injectable()
 export class PedidosProdutosService {
+  constructor(
+    private readonly produtosService: ProdutosService,){}
   create(createPedidosProdutoDto: CreatePedidosProdutoDto) {
     return 'This action adds a new pedidosProduto';
   }
