@@ -8,10 +8,20 @@ export class ProdutosController {
   constructor(private readonly produtosService: ProdutosService) {}
 
   @Post()
-  create(@Body() createProdutoDto: CreateProdutoDto) {
-    return this.produtosService.create(createProdutoDto);
+  async create(@Body() createProdutoDto: CreateProdutoDto) {
+    const { cpf, ...outrosCampos } = createProdutoDto;
+    try {
+      const produto = await this.produtosService.create(createProdutoDto, cpf);
+      return { message: 'Produto criado com sucesso', produto };
+    } catch (error) {
+      throw error;
+    }
   }
 
+  @Patch('/favoritar/:id')
+  favoritar(@Param('id') id: string){
+    return this.produtosService.favoritar(+id);
+  }
   @Get()
   findAll() {
     return this.produtosService.findAll();

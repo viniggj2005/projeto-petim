@@ -15,14 +15,14 @@ export class ProdutosService {
     private readonly pessoasService: PessoasService,
   ) {}
 
-  async create(createProdutoDto: CreateProdutoDto, cpfUsuario: string): Promise<Produto> {
+  async create(createProdutoDto: CreateProdutoDto, cpf: string): Promise<Produto> {
 
-    const usuario = await this.pessoasService.findByCpf(cpfUsuario);
+    const usuario = await this.pessoasService.findByCpf(cpf);
     if (!usuario) {
-      throw new NotFoundException(`Usuário com CPF ${cpfUsuario} não encontrado.`);
+      throw new NotFoundException(`Usuário com CPF ${cpf} não encontrado.`);
     }
     if (!usuario.admin) {
-      throw new BadRequestException(`Usuário com CPF ${cpfUsuario} não tem permissão para criar produtos.`);
+      throw new BadRequestException(`Usuário com CPF ${cpf} não tem permissão para criar produtos.`);
     }
 
     const produto = this.produtoRepository.create(createProdutoDto);
@@ -47,6 +47,16 @@ export class ProdutosService {
     const produto = await this.findOne(id);
     this.produtoRepository.merge(produto, updateProdutoDto);
     return this.produtoRepository.save(produto);
+  }
+  async favoritar(id:number):Promise<Produto>{
+    const produto = await this.produtoRepository.findOne({where:{id}});
+    if (!produto) {
+      throw new NotFoundException('Produto não encontrado');
+    }
+    produto.favorito=true;
+    const updatedproduto=await this.produtoRepository.save(produto)
+
+    return updatedproduto;
   }
 
   async remove(id: number): Promise<void> {
