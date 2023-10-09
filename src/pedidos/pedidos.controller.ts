@@ -11,10 +11,12 @@ export class PedidosController {
   constructor(private readonly pedidosService: PedidosService,private readonly pedidosProdutosService: PedidosProdutosService,) {}
 
   @Post()
-  async createPedido(@Body() createPedidoDto: CreatePedidoDto): Promise<Pedido> {
-    const pedido = await this.pedidosService.create(createPedidoDto);
-    return  pedido;
+  async createPedido(@Body() createPedidoComProdutosDto: CreatePedidoDto): Promise<Pedido> {
+    const { pessoaId, produtoIds, quantidades } = createPedidoComProdutosDto;
+    const pedido = await this.pedidosService.create(pessoaId, produtoIds, quantidades);
+    return pedido;
   }
+  
 
   @Get()
   findAll() {
@@ -26,10 +28,6 @@ export class PedidosController {
     return this.pedidosService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
-    return this.pedidosService.update(+id, updatePedidoDto);
-  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
