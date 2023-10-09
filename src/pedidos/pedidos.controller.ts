@@ -28,9 +28,4 @@ export class PedidosController {
     return this.pedidosService.findOne(+id);
   }
 
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pedidosService.remove(+id);
-  }
 }

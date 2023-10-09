@@ -47,20 +47,25 @@ export class PedidosService {
   }
 
   async findAll(): Promise<Pedido[]> {
-    return this.pedidoRepository.find();
+  
+    return this.pedidoRepository.find({
+      relations: ['pedidos_produto'], 
+    });
   }
 
   async findOne(id: number): Promise<Pedido> {
-    const pedido = await this.pedidoRepository.findOne({where:{id}});
+    const pedido = await this.pedidoRepository.findOne({
+      where: { id },
+      relations: ['pedidos_produto'],
+    });
+  
     if (!pedido) {
       throw new NotFoundException(`Pedido com ID ${id} não encontrado.`);
     }
+  
     return pedido;
   }
+  
+  
 
-
-  async remove(id: number): Promise<void> {
-    const pedido = await this.findOne(id);
-    await this.pedidoRepository.remove(pedido);
-  }
 }
