@@ -1,10 +1,11 @@
-import { IsNotEmpty } from "class-validator";
+import { IsInt, IsNotEmpty, IsArray } from 'class-validator';
+import { CreatePedidoDto } from 'src/pedidos/dto/create-pedido.dto';
 
 export class CreatePedidosProdutoDto {
-
-    @IsNotEmpty()
-    produtoId: number;
-
-    @IsNotEmpty()
-    quantidade: number;
-  }
+   
+    createPedidoDto: CreatePedidoDto; 
+    pedidoId: number;
+    produtoIds: number[];
+    quantidades: number[];
+      
+}

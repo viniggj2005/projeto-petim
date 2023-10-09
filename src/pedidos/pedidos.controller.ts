@@ -2,14 +2,18 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PedidosService } from './pedidos.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
+import { PedidosProdutosService } from 'src/pedidos_produtos/pedidos_produtos.service';
+import { CreatePedidosProdutoDto } from 'src/pedidos_produtos/dto/create-pedidos_produto.dto';
+import { Pedido } from './entities/pedido.entity';
 
 @Controller('pedidos')
 export class PedidosController {
-  constructor(private readonly pedidosService: PedidosService) {}
+  constructor(private readonly pedidosService: PedidosService,private readonly pedidosProdutosService: PedidosProdutosService,) {}
 
   @Post()
-  create(@Body() createPedidoDto: CreatePedidoDto) {
-    return this.pedidosService.create(createPedidoDto);
+  async createPedido(@Body() createPedidoDto: CreatePedidoDto): Promise<Pedido> {
+    const pedido = await this.pedidosService.create(createPedidoDto);
+    return  pedido;
   }
 
   @Get()

@@ -5,30 +5,30 @@ import { UpdatePedidosProdutoDto } from './dto/update-pedidos_produto.dto';
 
 @Controller('pedidos-produtos')
 export class PedidosProdutosController {
-  constructor(private readonly pedidosProdutosService: PedidosProdutosService) {}
+    constructor(private readonly pedidosProdutosService: PedidosProdutosService) {}
 
-  @Post()
-  create(@Body() createPedidosProdutoDto: CreatePedidosProdutoDto) {
-    return this.pedidosProdutosService.create(createPedidosProdutoDto);
-  }
+    @Post()
+    async create(@Body() createPedidosProdutoDto: CreatePedidosProdutoDto): Promise<string> {
+      return this.pedidosProdutosService.create(createPedidosProdutoDto);
+    }
 
-  @Get()
-  findAll() {
-    return this.pedidosProdutosService.findAll();
-  }
+//   @Get()
+//   findAll() {
+//     return this.pedidosProdutosService.findAll();
+//   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pedidosProdutosService.findOne(+id);
-  }
+//   @Get(':id')
+//   findOne(@Param('id') id: string) {
+//     return this.pedidosProdutosService.findOne(+id);
+//   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePedidosProdutoDto: UpdatePedidosProdutoDto) {
-    return this.pedidosProdutosService.update(+id, updatePedidosProdutoDto);
-  }
+//   @Patch(':id')
+//   update(@Param('id') id: string, @Body() updatePedidosProdutoDto: UpdatePedidosProdutoDto) {
+//     return this.pedidosProdutosService.update(+id, updatePedidosProdutoDto);
+//   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pedidosProdutosService.remove(+id);
-  }
-}
+//   @Delete(':id')
+//   remove(@Param('id') id: string) {
+//     return this.pedidosProdutosService.remove(+id);
+//   }
+ }

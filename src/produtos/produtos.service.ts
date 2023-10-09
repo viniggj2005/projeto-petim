@@ -3,7 +3,7 @@ import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Produto } from './entities/produto.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { PessoasService } from '../pessoas/pessoas.service';
 @Injectable()
 export class ProdutosService {
@@ -39,6 +39,13 @@ export class ProdutosService {
       .skip(skip)
       .take(pageSize)
       .getMany();
+  }
+  async findByIds(ids: number[]): Promise<Produto[]> {
+    return this.produtoRepository.find({
+      where: {
+        id: In(ids), 
+      },
+    });
   }
   
   async findAll(): Promise<Produto[]> {
