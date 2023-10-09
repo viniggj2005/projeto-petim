@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotAcceptableException } from '@nestjs/common';
 import { PessoasService } from './pessoas.service';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
@@ -16,19 +16,22 @@ export class PessoasController {
   findAll() {
     return this.pessoasService.findAll();
   }
-
+  @Get('page/:page/:numberitens')
+  page(@Param('page') page: number, @Param('numberitens') numberitens: number) {
+    return this.pessoasService.page(+page, +numberitens);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.pessoasService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePessoaDto: UpdatePessoaDto) {
-    return this.pessoasService.update(+id, updatePessoaDto);
+  update(@Param('id') id: string) {
+    throw new NotAcceptableException('este usuario não tem permissão para alterar seus dados')
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pessoasService.remove(+id);
+  async removePessoa(@Param('id') id: number) {
+    throw new NotAcceptableException('o usuario não pode ser deletado, pois possui pedidos')
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, NotAcceptableException } from '@nestjs/common';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,8 +28,8 @@ export class ProdutosService {
     const produto = this.produtoRepository.create(createProdutoDto);
     return this.produtoRepository.save(produto);
   }
-  async page(page: number): Promise<Produto[]> {
-    const pageSize = 20;
+  async page(page: number,numberitens:number): Promise<Produto[]> {
+    const pageSize = numberitens;
     if (isNaN(page) || !Number.isInteger(page) || page <= 0) {
       throw new BadRequestException('O valor da página deve ser um número inteiro válido maior que zero.');
     }
@@ -93,19 +93,8 @@ export class ProdutosService {
   }
   
 
-  async remove(id: number, cpf: string): Promise<void> {
-    const usuario = await this.pessoasService.findByCpf(cpf);
-    if (!usuario) {
-      throw new NotFoundException(`Usuário com CPF ${cpf} não encontrado.`);
-    }
-    if (!usuario.admin) {
-      throw new BadRequestException(`Usuário com CPF ${cpf} não tem permissão para remover produtos.`);
-    }
-    const produto = await this.produtoRepository.findOne({ where: { id } });
-    if (!produto) {
-      throw new NotFoundException('Produto não encontrado');
-    }
-    await this.produtoRepository.remove(produto);
+  async remove(id: number): Promise<void> {
+    throw new NotAcceptableException('os produtos não podem ser deletados');
   }
   
 }

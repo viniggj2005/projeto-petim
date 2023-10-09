@@ -68,21 +68,20 @@ export class PedidosProdutosService {
     return mensagem;
   }
 
-
+  async page(page: number, numberitens: number): Promise<Pedido[]> {
+    const pageSize = numberitens;
+    if (isNaN(page) || !Number.isInteger(page) || page <= 0) {
+      throw new BadRequestException('O valor da página deve ser um número inteiro válido maior que zero.');
+    }
+    const skip = (page - 1) * pageSize;
+    return this.pedidoRepository
+      .createQueryBuilder('pedido')
+      .leftJoinAndSelect('pedido.pedidos_produto', 'pedidosProduto') 
+      .leftJoinAndSelect('pedidosProduto.produto', 'produto') 
+      .skip(skip)
+      .take(pageSize)
+      .getMany();
+  }
   
-//   async findAll() {
-//     // Implemente a lógica para encontrar todos os pedidosProdutos aqui
-//   }
-
-//   async findOne(id: number) {
-//     // Implemente a lógica para encontrar um pedidosProduto por ID aqui
-//   }
-
-//   async update(id: number, updatePedidosProdutoDto: UpdatePedidosProdutoDto) {
-//     // Implemente a lógica para atualizar um pedidosProduto por ID aqui
-//   }
-
-//   async remove(id: number) {
-//     // Implemente a lógica para remover um pedidosProduto por ID aqui
-//   }
+  
 }

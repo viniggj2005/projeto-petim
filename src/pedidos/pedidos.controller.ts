@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotAcceptableException } from '@nestjs/common';
 import { PedidosService } from './pedidos.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
@@ -27,5 +27,8 @@ export class PedidosController {
   findOne(@Param('id') id: string) {
     return this.pedidosService.findOne(+id);
   }
-
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    throw new NotAcceptableException('o pedido não pode ser deletado pois é de um usuario')
+  }
 }

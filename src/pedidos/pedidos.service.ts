@@ -47,16 +47,15 @@ export class PedidosService {
   }
 
   async findAll(): Promise<Pedido[]> {
-  
     return this.pedidoRepository.find({
-      relations: ['pedidos_produto'], 
+      relations: ['pedidos_produto', 'pedidos_produto.produto'], 
     });
   }
-
+  
   async findOne(id: number): Promise<Pedido> {
     const pedido = await this.pedidoRepository.findOne({
       where: { id },
-      relations: ['pedidos_produto'],
+      relations: ['pedidos_produto', 'pedidos_produto.produto'],
     });
   
     if (!pedido) {

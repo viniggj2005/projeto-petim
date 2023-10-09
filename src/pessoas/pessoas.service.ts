@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pessoa } from './entities/pessoa.entity';
 import { Repository } from 'typeorm';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Injectable()
 export class PessoasService {
@@ -15,10 +16,20 @@ export class PessoasService {
     const pessoa = this.pessoaRepository.create(createPessoaDto);
     return this.pessoaRepository.save(pessoa);
   }
-
-  async findByCpf(cpf: string): Promise<Pessoa | undefined> {
-    return this.pessoaRepository.findOne({ where: { cpf } });
+  async page(page: number,numberitens:number): Promise<Pessoa[]> {
+    const pageSize = numberitens;
+    if (isNaN(page) || !Number.isInteger(page) || page <= 0) {
+      throw new BadRequestException('O valor da página deve ser um número inteiro válido maior que zero.');
+    }
+    const skip = (page - 1) * pageSize;
+    return this.pessoaRepository
+      .createQueryBuilder('pessoa')
+      .skip(skip)
+      .take(pageSize)
+      .getMany();
   }
+
+  
   async findAll(): Promise<Pessoa[]> {
     return this.pessoaRepository.find();
   }
@@ -31,14 +42,9 @@ export class PessoasService {
     return pessoa;
   }
 
-  async update(id: number, updatePessoaDto: UpdatePessoaDto): Promise<Pessoa> {
-    const pessoa = await this.findOne(id);
-    this.pessoaRepository.merge(pessoa, updatePessoaDto);
-    return this.pessoaRepository.save(pessoa);
+ 
+async findByCpf(cpf: string): Promise<Pessoa | undefined> {
+    return this.pessoaRepository.findOne({ where: { cpf } });
   }
 
-  async remove(id: number): Promise<void> {
-    const pessoa = await this.findOne(id);
-    await this.pessoaRepository.remove(pessoa);
-  }
 }

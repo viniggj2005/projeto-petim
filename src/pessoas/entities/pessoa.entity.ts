@@ -17,6 +17,7 @@ export class Pessoa {
   admin: boolean;
   
 
-  @OneToMany(()=>Pedido,(pedido)=>pedido.pessoa)
-  pedido:Pedido[];
+  @OneToMany(() => Pedido, pedido => pedido.pessoa, { onDelete: 'CASCADE' })
+pedido: Pedido[];
+
 }

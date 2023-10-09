@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotAcceptableException } from '@nestjs/common';
 import { PedidosProdutosService } from './pedidos_produtos.service';
 import { CreatePedidosProdutoDto } from './dto/create-pedidos_produto.dto';
 import { UpdatePedidosProdutoDto } from './dto/update-pedidos_produto.dto';
@@ -12,23 +12,18 @@ export class PedidosProdutosController {
       return this.pedidosProdutosService.create(createPedidosProdutoDto);
     }
 
-//   @Get()
-//   findAll() {
-//     return this.pedidosProdutosService.findAll();
-//   }
 
-//   @Get(':id')
-//   findOne(@Param('id') id: string) {
-//     return this.pedidosProdutosService.findOne(+id);
-//   }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updatePedidosProdutoDto: UpdatePedidosProdutoDto) {
+    throw new NotAcceptableException('os pedidos não podem ser atualizados pois pertecem a um usuario')
+  }
+  @Get('page/:page/:numberitens')
+  page(@Param('page') page: number, @Param('numberitens') numberitens: number) {
+    return this.pedidosProdutosService.page(+page, +numberitens);
+  }
 
-//   @Patch(':id')
-//   update(@Param('id') id: string, @Body() updatePedidosProdutoDto: UpdatePedidosProdutoDto) {
-//     return this.pedidosProdutosService.update(+id, updatePedidosProdutoDto);
-//   }
-
-//   @Delete(':id')
-//   remove(@Param('id') id: string) {
-//     return this.pedidosProdutosService.remove(+id);
-//   }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    throw new NotAcceptableException('os pedidos não podem ser deletados pois pertecem a um usuario')
+  }
  }

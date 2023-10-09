@@ -18,16 +18,16 @@ export class ProdutosController {
     }
   }
 
-  @Patch('/favoritar/:id')
+  @Post('/favoritar/:id')
 favoritar(@Param('id') id: string, @Body() { cpf }: { cpf: string }) {
   return this.produtosService.favoritar(+id, cpf);
 }
 
 
-  @Get('page/:page')
-  page(@Param('page') page: number) {
-    return this.produtosService.page(+page);
-  }
+@Get('page/:page/:numberitens')
+page(@Param('page') page: number, @Param('numberitens') numberitens: number) {
+  return this.produtosService.page(+page, +numberitens);
+}
   @Get()
   findAll() {
     return this.produtosService.findAll();
@@ -49,7 +49,7 @@ favoritar(@Param('id') id: string, @Body() { cpf }: { cpf: string }) {
   }
  
   @Delete(':id')
-  remove(@Param('id') id: string, @Body() { cpf }: { cpf: string }) {
-    return this.produtosService.remove(+id,cpf);
+  remove(@Param('id') id: string) {
+    return this.produtosService.remove(+id);
   }
 }
